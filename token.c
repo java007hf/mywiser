@@ -136,7 +136,7 @@ token_to_postings_list(wiser_env *env,
   int token_id, token_docs_count;
 
   token_id = db_get_token_id(
-               env, token, token_size, document_id, &token_docs_count);
+               env, token, token_size, document_id, &token_docs_count);//benylwang token_docs_count 一直等于0;后面有更新逻辑；在db_update_postings会更新
   if (*postings) {
     HASH_FIND_INT(*postings, &token_id, ii_entry);
   } else {
@@ -151,7 +151,7 @@ token_to_postings_list(wiser_env *env,
     if (!ii_entry) { return -1; }
     HASH_ADD_INT(*postings, token_id, ii_entry);
 
-    pl = create_new_postings_list(document_id);
+    pl = create_new_postings_list(document_id); //benylwang 哪里去填充positions；token_to_postings_list会
     if (!pl) { return -1; }
     LL_APPEND(ii_entry->postings_list, pl);
   }
@@ -186,7 +186,8 @@ text_to_postings_lists(wiser_env *env,
 
   inverted_index_hash *buffer_postings = NULL;
 
-  for (; (t_len = ngram_next(t, text_end, n, &t)); t++, position++) {
+  for (; (t_len = ngram_next(t, text_end, n, &t)); t++, position++) { //benylwang 这个position不对，应该要加上过滤的字符
+    printf("\ntext_to_postings_lists t:%p position: %d==", t, position);
     /* 检索时，忽略掉由t中长度不足N-gram的最后几个字符构成的词元 */
     if (t_len >= n || document_id) {
       int retval, t_8_size;
@@ -194,6 +195,7 @@ text_to_postings_lists(wiser_env *env,
 
       utf32toutf8(t, t_len, t_8, &t_8_size);
 
+      printf("\n###text_to_postings_lists t:%p position: %d term %s==", t, position, t_8);
       retval = token_to_postings_list(env, document_id, t_8, t_8_size,
                                       position, &buffer_postings);
       if (retval) { return retval; }

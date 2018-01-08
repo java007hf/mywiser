@@ -33,13 +33,15 @@ add_document(wiser_env *env, const char *title, const char *body)
     /* 转换文档正文的字符编码 */
     if (!utf8toutf32(body, body_size, &body32, &body32_len)) {
       /* 为文档创建倒排列表 */
+      printf("=========== body: %s\n", body);
+
       text_to_postings_lists(env, document_id, body32, body32_len,
                              env->token_len, &env->ii_buffer);
       env->ii_buffer_count++;
       free(body32);
     }
     env->indexed_count++;
-    print_error("count:%d title: %s", env->indexed_count, title);
+    printf("count:%d title: %s\n", env->indexed_count, title);
   }
 
   /* 存储在缓冲区中的文档数量达到了指定的阈值时，更新存储器上的倒排索引 */
@@ -48,6 +50,13 @@ add_document(wiser_env *env, const char *title, const char *body)
     inverted_index_hash *p;
 
     print_time_diff();
+
+    //benylwang p = env->ii_buffer 是hash啊！这个跟inverted_index_hash的数据结构有关，可以研究下
+    //test
+    p = env->ii_buffer;
+    printf("========p token id  %d; docs_count %d \n", p->token_id, p->docs_count);
+
+    //end
 
     /* 更新所有词元对应的倒排项 */
     for (p = env->ii_buffer; p != NULL; p = p->hh.next) {

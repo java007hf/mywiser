@@ -1,6 +1,6 @@
 #include "util.h"
 #include "database.h"
-
+#include <stdio.h>
 /**
  * 初始化数据库
  * @param[in] env 存储着应用程序运行环境的结构体
@@ -246,6 +246,8 @@ db_get_token_id(const wiser_env *env,
   if (rc == SQLITE_ROW) {
     if (docs_count) {
       *docs_count = sqlite3_column_int(env->get_token_id_st, 1);
+
+      printf("\ndb_get_token_id docs_count %d ", *docs_count);
     }
     return sqlite3_column_int(env->get_token_id_st, 0);
   } else {
