@@ -1,5 +1,6 @@
 # mywiser
-##倒排索引建立过程
+倒排索引建立过程
+----
 **1.通过解析 https://dumps.wikimedia.org/zhwiki/latest/zhwiki-latest-pages-articles.xml.bz2的超大XML文件**
 
 
@@ -11,5 +12,8 @@
 
 **5.完成倒排索引的建立过程**
 
-##搜索过程
+
+
+搜索过程
+----
 **待续**
